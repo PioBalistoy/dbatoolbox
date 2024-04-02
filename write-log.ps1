@@ -1,5 +1,5 @@
-##write a function tthat write log file for powershell processes.
-##the function will accepte the following parameters:
+## This is a function that write log file for powershell processes.
+##  the function will accepte the following parameters:
 ##  $Severity with possible values of  INFO, WaRNINg and ERROR. The default value for it is INFO. This classfies the message.
 ## $Message which will contains the message to log.
 ## $Logfile which will specify the directory to put the file. The default would be the current location. If the parameter passed is just a folder location,
@@ -30,19 +30,20 @@ function Write-Log {
         [Parameter(Position=4, Mandatory=$false)]
         [bool]$Overwrite = $false
     )
-
     $logDateTime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logEntry = "$logDateTime`: [$Severity] : $Message"
-
+    write-host $LogEntry
     if (-not (Test-Path -Path $Logfile)) {
         $logFileCreated = $true
         $logFileContent = "$logDateTime`: [INFO]: Log file created. Called by $($MyInvocation.MyCommand.Name)"
         $logFileContent | Out-File -FilePath $Logfile -Encoding UTF8
+       
     }
 
     if ($Overwrite) {
         $logFileContent = "$logDateTime`: [INFO]: Log file overwritten. Called by $($MyInvocation.MyCommand.Name)"
         $logFileContent | Out-File -FilePath $Logfile -Encoding UTF8
+       
     }
     elseif (-not $Append) {
         $logFileCreated = $true
@@ -52,12 +53,15 @@ function Write-Log {
         $logFileNewName = "$logFileBaseName-$logFileSuffix$logFileExtension"
         $logFileContent = "$logDateTime`: [INFO]: Log file created. Called by $($MyInvocation.MyCommand.Name)"
         $logFileContent | Out-File -FilePath $logFileNewName -Encoding UTF8
+       
     }
 
     if (-not $logFileCreated) {
         $logFileContent = $logEntry
         $logFileContent | Out-File -FilePath $Logfile -Append -Encoding UTF8
+        
     }
 
-    return $Logfile
+
+return $LOgfile
 }
